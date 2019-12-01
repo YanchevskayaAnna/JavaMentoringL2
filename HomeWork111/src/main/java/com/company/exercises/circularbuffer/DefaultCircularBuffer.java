@@ -54,9 +54,9 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T[] toArray(T[] a) {
+    public T[] toArray() {
         T[] arrResult = (T[]) java.lang.reflect.Array
-                .newInstance(a.getClass().getComponentType(), counter);
+                .newInstance(arr.getClass().getComponentType(), counter);
         int arrTail = tail;
         for (int i = 0; i < counter; i++) {
             arrResult[i] = (T) arr[arrTail];

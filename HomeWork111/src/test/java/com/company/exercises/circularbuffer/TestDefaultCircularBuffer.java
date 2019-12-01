@@ -123,7 +123,7 @@ public class TestDefaultCircularBuffer {
         circularBuffer.get(); //"a"
         circularBuffer.put("n");
         String[] expected = {"b", "c", "d", "e", "f", "g", "i", "k", "l", "n"};
-        assertArrayEquals(expected, circularBuffer.toArray(expected));
+        assertArrayEquals(expected, circularBuffer.toArray());
     }
 
     @Test
