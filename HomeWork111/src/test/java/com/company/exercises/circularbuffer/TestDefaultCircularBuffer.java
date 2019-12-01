@@ -3,12 +3,13 @@ package com.company.exercises.circularbuffer;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import static junit.framework.TestCase.assertSame;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 
 public class TestDefaultCircularBuffer {
 
@@ -122,7 +123,7 @@ public class TestDefaultCircularBuffer {
         circularBuffer.get(); //"a"
         circularBuffer.put("n");
         String[] expected = {"b", "c", "d", "e", "f", "g", "i", "k", "l", "n"};
-        assertSame(expected, circularBuffer.toArray());
+        assertArrayEquals(expected, circularBuffer.toArray(expected));
     }
 
     @Test
@@ -136,10 +137,10 @@ public class TestDefaultCircularBuffer {
     @Test
     public void testSort() {
         circularBuffer = new DefaultCircularBuffer<>(10);
-        circularBuffer.addAll(Arrays.asList("c",  "b", "abcd", "abc", "e", "f", "g", "abcddefg", "k", ""));
+        circularBuffer.addAll(Arrays.asList("c", "b", "abcd", "abc", "e", "f", "g", "abcddefg", "k", ""));
         circularBuffer.get(); // "c"
         circularBuffer.get(); // "b"
-        circularBuffer.sort(Comparator.comparing(String ::length));
+        circularBuffer.sort(Comparator.comparing(String::length));
         List<String> expected = Arrays.asList("", "e", "f", "g", "k", "abc", "abcd", "abcddefg");
         List<String> actual = circularBuffer.asList();
         assertEquals(expected, actual);
@@ -154,11 +155,11 @@ public class TestDefaultCircularBuffer {
         assertEquals(expected, actual);
 
         circularBuffer = new DefaultCircularBuffer<>(3);
-        circularBuffer.addAll(Arrays.asList("c",  "b", "abcd"));
+        circularBuffer.addAll(Arrays.asList("c", "b", "abcd"));
         circularBuffer.get(); // "c"
         circularBuffer.get(); // "b"
         circularBuffer.get(); // "abcd"
-        circularBuffer.sort(Comparator.comparing(String ::length));
+        circularBuffer.sort(Comparator.comparing(String::length));
         expected = Collections.EMPTY_LIST;
         actual = circularBuffer.asList();
         assertEquals(expected, actual);

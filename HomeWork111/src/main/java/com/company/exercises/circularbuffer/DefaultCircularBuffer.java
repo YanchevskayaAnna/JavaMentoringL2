@@ -4,10 +4,12 @@ import com.company.exercises.circularbuffer.exceptions.EmptyBufferException;
 import com.company.exercises.circularbuffer.exceptions.FullBufferException;
 import com.company.exercises.circularbuffer.exceptions.NotEnoughFreeSpaceException;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
-public class DefaultCircularBuffer<T> implements CircularBuffer<T>{
+public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
     private T[] arr;
     private int head = 0;
     private int tail = 0;
@@ -15,7 +17,7 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T>{
     private static final int DEFAULT_ARRAY_SIZE = 10;
 
     public DefaultCircularBuffer() {
-        this.arr = (T[])new Object[DEFAULT_ARRAY_SIZE];
+        this.arr = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
     public DefaultCircularBuffer(int size) {
@@ -51,12 +53,10 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T>{
         return arrResult;
     }
 
-    public T[] toArray() {
-        Class<T[]> t;
-        @SuppressWarnings("unchecked")
-        //T[] arrResult = (T[]) Array.newInstance((T) t.getComponentType(), counter);
-        //@SuppressWarnings("unchecked")
-        T[] arrResult = (T[]) new Object[counter];
+    @SuppressWarnings("unchecked")
+    public T[] toArray(T[] a) {
+        T[] arrResult = (T[]) java.lang.reflect.Array
+                .newInstance(a.getClass().getComponentType(), counter);
         int arrTail = tail;
         for (int i = 0; i < counter; i++) {
             arrResult[i] = (T) arr[arrTail];
@@ -68,7 +68,7 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T>{
     public List<T> asList() {
         List<T> list = new ArrayList<>();
         int arrTail = tail;
-        for(int i = 0; i < counter; i++) {
+        for (int i = 0; i < counter; i++) {
             list.add(arr[arrTail]);
             arrTail = (arrTail + 1) % arr.length;
         }
@@ -103,7 +103,7 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T>{
         tail = 0;
     }
 
-    private boolean isFull(){
+    private boolean isFull() {
         return (head == tail) && !isEmpty();
     }
 

@@ -10,7 +10,7 @@ public interface CircularBuffer<T> {
 
     Object[] toObjectArray();
 
-    T[] toArray();
+    T[] toArray(T[] a);
 
     List<T> asList();
 
