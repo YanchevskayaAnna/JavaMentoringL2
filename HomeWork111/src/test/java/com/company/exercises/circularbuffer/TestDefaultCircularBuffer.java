@@ -22,33 +22,33 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testGet() {
+    public void shouldReturnTail() {
         String expected = "a";
         String actual = circularBuffer.get();
         assertSame(expected, actual);
     }
 
     @Test
-    public void testGetThrowException() {
+    public void shouldThrowExceptionWhenGetTail() {
         CircularBuffer<String> clearCircularBuffer = new DefaultCircularBuffer<>(10);
         assertThrows(RuntimeException.class, clearCircularBuffer::get);
     }
 
     @Test
-    public void testPutThrowException() {
+    public void shouldThrowExceptionWhenPutInFullBuffer() {
         assertThrows(RuntimeException.class, () -> {
             circularBuffer.put("m");
         });
     }
 
     @Test
-    public void testPut() {
+    public void shouldNotThrowExceptionWhenAddToBuffer() {
         circularBuffer.get();
         circularBuffer.put("m");
     }
 
     @Test
-    public void testAddAllThrowException() {
+    public void shouldNotThrowExceptionWhenNotEnoughSpaceForAdding() {
         assertThrows(RuntimeException.class, () -> {
             circularBuffer.addAll(Arrays.asList("m", "n", "o"));
         });
@@ -60,7 +60,7 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testAddAll() {
+    public void shouldNotThrowExceptionWhenAddSeveralItemsToBuffer() {
         circularBuffer = new DefaultCircularBuffer<>(10);
         List<String> expected = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "i", "k", "l");
         circularBuffer.addAll(expected);
@@ -77,7 +77,7 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testFIFO() {
+    public void shouldGetElementsInFIFO() {
         circularBuffer.get(); //"a"
         circularBuffer.get(); //"b"
         circularBuffer.get(); //"c"
@@ -102,7 +102,7 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testAsList() {
+    public void shouldConvertToList() {
         circularBuffer.get(); //"a"
         circularBuffer.get(); //"b"
         circularBuffer.get(); //"c"
@@ -119,7 +119,7 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testToArray() {
+    public void shouldConvertToArray() {
         circularBuffer.get(); //"a"
         circularBuffer.put("n");
         String[] expected = {"b", "c", "d", "e", "f", "g", "i", "k", "l", "n"};
@@ -127,7 +127,7 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testToObjectArray() {
+    public void shouldConvertToObjectArray() {
         circularBuffer.get(); //"a"
         circularBuffer.put("n");
         Object[] expected = {"b", "c", "d", "e", "f", "g", "i", "k", "l", "n"};
@@ -135,7 +135,7 @@ public class TestDefaultCircularBuffer {
     }
 
     @Test
-    public void testSort() {
+    public void shouldSortBuffer() {
         circularBuffer = new DefaultCircularBuffer<>(10);
         circularBuffer.addAll(Arrays.asList("c", "b", "abcd", "abc", "e", "f", "g", "abcddefg", "k", ""));
         circularBuffer.get(); // "c"

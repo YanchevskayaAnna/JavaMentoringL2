@@ -10,14 +10,14 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
+    private static final int DEFAULT_ARRAY_SIZE = 10;
     private T[] arr;
     private int head = 0;
     private int tail = 0;
     private int counter = 0;
-    private static final int DEFAULT_ARRAY_SIZE = 10;
 
     public DefaultCircularBuffer() {
-        this.arr = (T[]) new Object[DEFAULT_ARRAY_SIZE];
+        this(DEFAULT_ARRAY_SIZE);
     }
 
     public DefaultCircularBuffer(int size) {
@@ -26,19 +26,19 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
 
     public void put(T t) {
         if (isFull()) {
-            throw new FullBufferException();
+            throw new FullBufferException("Buffer is full");
         }
         arr[head] = t;
-        head = (head + 1) % arr.length;
+        head = increaseInCircle(head);
         counter++;
     }
 
     public T get() {
         if (isEmpty()) {
-            throw new EmptyBufferException();
+            throw new EmptyBufferException("Buffer is empty");
         }
         T result = arr[tail];
-        tail = (tail + 1) % arr.length;
+        tail = increaseInCircle(tail);
         counter--;
         return result;
     }
@@ -48,7 +48,7 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
         int arrTail = tail;
         for (int i = 0; i < counter; i++) {
             arrResult[i] = arr[arrTail];
-            arrTail = (arrTail + 1) % arr.length;
+            arrTail = increaseInCircle(arrTail);
         }
         return arrResult;
     }
@@ -60,9 +60,9 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
         int arrTail = tail;
         for (int i = 0; i < counter; i++) {
             arrResult[i] = (T) arr[arrTail];
-            arrTail = (arrTail + 1) % arr.length;
+            arrTail = increaseInCircle(arrTail);
         }
-        return (T[]) arrResult;
+        return arrResult;
     }
 
     public List<T> asList() {
@@ -70,14 +70,14 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
         int arrTail = tail;
         for (int i = 0; i < counter; i++) {
             list.add(arr[arrTail]);
-            arrTail = (arrTail + 1) % arr.length;
+            arrTail = increaseInCircle(arrTail);
         }
         return list;
     }
 
     public void addAll(List<? extends T> toAdd) {
         if (isFull() || ((counter + toAdd.size() > arr.length))) {
-            throw new NotEnoughFreeSpaceException();
+            throw new NotEnoughFreeSpaceException("there is not enough free space in the buffer");
         }
         for (T t : toAdd) {
             put(t);
@@ -95,7 +95,7 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
         int arrTail = tail;
         for (int i = 0; i < counter; i++) {
             sortArr[i] = arr[arrTail];
-            arrTail = (arrTail + 1) % arr.length;
+            arrTail = increaseInCircle(arrTail);
         }
         Arrays.sort(sortArr, comparator);
         arr = counter == arr.length ? sortArr : Arrays.copyOf(sortArr, arr.length);
@@ -109,5 +109,9 @@ public class DefaultCircularBuffer<T> implements CircularBuffer<T> {
 
     public boolean isEmpty() {
         return counter == 0;
+    }
+
+    private int increaseInCircle(int point) {
+        return (point + 1) % arr.length;
     }
 }
